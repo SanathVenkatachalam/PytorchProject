@@ -12,7 +12,7 @@ import os
 image_model = InceptionV3(weights='imagenet')
 image_model = Model(image_model.input, image_model.layers[-2].output)
 
-
+#preprocess the image so that we can analyze key features
 def preprocess_image(image_path):
     img = load_img(image_path, target_size=(299, 299))
     img = img_to_array(img)
@@ -26,7 +26,7 @@ with open('tokenizer.pkl', 'rb') as f:
 
 model = load_model('image_captioning_model.h5')
 
-# Generate caption for an image
+#using the key features, we create captions
 def generate_caption(image_path, max_length=34):
     image = preprocess_image(image_path)
     image_features = image_model.predict(image, verbose=0)
