@@ -33,6 +33,8 @@ def generate_caption(image_path, max_length=34):
     
     in_text = 'startseq'
     for _ in range(max_length):
+        #create captions using the key features of the picture.
+        #pick out certain words
         sequence = tokenizer.texts_to_sequences([in_text])[0]
         sequence = pad_sequences([sequence], maxlen=max_length)
         yhat = model.predict([image_features, sequence], verbose=0)
@@ -40,25 +42,14 @@ def generate_caption(image_path, max_length=34):
         word = tokenizer.index_word[yhat]
     return in_text.split(' ')[1:-1]
 
-
+#backup the model
 def backup(model, tokenizer):
     model.save('image_captioning_model_backup.h5')
     
     with open('tokenizer_backup.pkl', 'wb') as f:
         pickle.dump(tokenizer, f)
     
-
+#optimize
 def optimize(model):
     model.compile(optimizer='adam', loss='categorical_crossentropy')
     
-
-
-image_path = 'example.jpg'
-caption = generate_caption(image_path)
-print('Generated Caption:', ' '.join(caption))
-
-
-backup(model, tokenizer)
-
-
-optimize(model)
